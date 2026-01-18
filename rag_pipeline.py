@@ -2,11 +2,11 @@ import os
 from pathlib import Path
 import logging
 
-from langchain_community.document_loaders import PyMuPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_google_genai import GoogleGenerativeAIEmbeddings, GoogleGenerativeAI
 from langchain_community.vectorstores import FAISS
 from langchain_core.documents.base import Document
+from document_processors.document_processor import DocumentProcessor
 
 
 logger = logging.getLogger(__name__)
@@ -34,38 +34,6 @@ def create_model(temperature: float = 0.1) -> GoogleGenerativeAI:
     return model
 
 
-def get_3gpp_document_path(data_dir: str = "data") -> str | None:
-    """
-    Get the path of the first PDF document in the specified directory.
-    """
-    base_path = Path(data_dir)
-
-    if not base_path.exists():
-        logger.error(f"Folder {data_dir} does not exist.")
-        return None
-
-    pdf_files = list(base_path.glob("*.pdf"))
-    if not pdf_files:
-        logger.error("No PDF files found in the specified directory.")
-        return None
-    
-    return str(pdf_files[0])
-
-
-def load_pdf_document(file_path: str):
-    """
-    Load a PDF document using PyMuPDF.
-    """
-    try:
-        loader = PyMuPDFLoader(file_path)
-        data = loader.load()
-        logger.info(f"Loaded PDF document from {file_path}.")
-        return data
-    except Exception as e:
-        logger.error(f"Failed to load PDF document with PyMuPDF: {e}")
-        return None
-    
-
 def split_text(docs: list[Document], chunk_size: int = 1000, chunk_overlap: int = 200) -> list[Document]:
     """
     Split text into chunks of specified size with overlap.
@@ -91,7 +59,7 @@ def embed_texts(chunks: list[Document], model_name: str) -> FAISS:
     return vectorstore
 
 
-def start_rag_pipeline() -> FAISS | None:
+def start_rag_pipeline(file_processor: DocumentProcessor) -> FAISS | None:
     """
     Orchestrate the document processing and embedding pipeline.
     """
@@ -107,12 +75,12 @@ def start_rag_pipeline() -> FAISS | None:
         )
         return vectorstore
         
-    pdf_path = get_3gpp_document_path()
+    pdf_path = file_processor.get_3gpp_document_path()
     if not pdf_path:
         logger.error("Pipeline aborted: No document found.")
         return None
 
-    document = load_pdf_document(pdf_path)
+    document = file_processor.load_document(pdf_path)
     if not document:
         logger.error("Pipeline aborted: Failed to load document.")
         return None
