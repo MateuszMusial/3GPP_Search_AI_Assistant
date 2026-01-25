@@ -1,9 +1,10 @@
 import pytest
 from pathlib import Path
 from pytest_mock import MockerFixture
-from document_processors.pdf_processor import PDFProcessor
+
 from langchain_core.documents.base import Document
 
+from document_processors.pdf_processor import PDFProcessor
 
 
 def test_get_3gpp_document_path(mocker: MockerFixture) -> None:

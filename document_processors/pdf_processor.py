@@ -2,6 +2,7 @@ import logging
 from pathlib import Path
 
 from langchain_community.document_loaders import PyMuPDFLoader
+
 from document_processors.document_processor import DocumentProcessor
 
 
