@@ -4,8 +4,8 @@
 import logging
 from dotenv import load_dotenv
 
-from rag_pipeline import start_rag_pipeline, create_model
 from document_processors.pdf_processor import PDFProcessor
+from query_executor import QueryExecutor
 
 
 logging.basicConfig(
@@ -16,17 +16,11 @@ logging.basicConfig(
 
 def main():
     load_dotenv()
-    file_processor = PDFProcessor()
 
-    vectorstore = start_rag_pipeline(file_processor=file_processor)
-    print(f"Vectorstore state: {vectorstore}")
-
-    model = create_model()
+    query_executor = QueryExecutor(file_processor=PDFProcessor())
     
-    if vectorstore:
-        model_response = model.invoke("hi")
-        print("Model response:", model_response)
-
+    result = query_executor.execute_query("What is 5G?")
+    print("Query Result:", result)
 
 if __name__ == "__main__":
     main()

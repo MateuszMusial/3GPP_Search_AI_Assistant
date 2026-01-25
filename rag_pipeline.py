@@ -1,9 +1,8 @@
-import os
 from pathlib import Path
 import logging
 
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_google_genai import GoogleGenerativeAIEmbeddings, GoogleGenerativeAI
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain_core.documents.base import Document
 
@@ -16,23 +15,6 @@ logger = logging.getLogger(__name__)
 MODEL_NAME = "gemini-2.5-pro"
 EMBEDDING_MODEL_NAME = "models/embedding-001"
 FAISS_INDEX_PATH = "faiss_index"
-
-
-def create_model(temperature: float = 0.1) -> GoogleGenerativeAI:
-    """
-    Create and return a Google Generative AI model instance.
-    """
-    api_key = os.environ.get("GOOGLE_API_KEY")
-    if not api_key:
-        logger.warning("GOOGLE_API_KEY not found in environment variables.")
-        
-    model = GoogleGenerativeAI(
-        model=MODEL_NAME,
-        temperature=temperature,
-        api_key=api_key
-    )
-    logger.info("AI model created successfully.")
-    return model
 
 
 def split_text(docs: list[Document], chunk_size: int = 1000, chunk_overlap: int = 200) -> list[Document]:
@@ -68,26 +50,46 @@ def start_rag_pipeline(file_processor: DocumentProcessor) -> FAISS | None:
     faiss_index_path = Path(FAISS_INDEX_PATH) / "index.faiss"
     
     if faiss_index_path.exists():
-        logger.info("FAISS index already exists. Loading existing index.")
-        vectorstore = FAISS.load_local(
-            FAISS_INDEX_PATH, 
-            GoogleGenerativeAIEmbeddings(model=EMBEDDING_MODEL_NAME),
-            allow_dangerous_deserialization=True
-        )
-        return vectorstore
-        
-    pdf_path = file_processor.get_3gpp_document_path()
-    if not pdf_path:
-        logger.error("Pipeline aborted: No document found.")
+        logger.info("FAISS index already exists. Loading existing vectorstore.")
+        return load_vectorstore()
+
+    try:
+        pdf_path = file_processor.get_3gpp_document_path()
+    except FileNotFoundError:
+        logger.error("Pipeline aborted: 3GPP document not found.")
         return None
 
-    document = file_processor.load_document(pdf_path)
-    if not document:
+    try:
+        document = file_processor.load_document(pdf_path)
+    except FileNotFoundError:
         logger.error("Pipeline aborted: Failed to load document.")
         return None
 
     chunks = split_text(document)
-    vectorstore = embed_texts(chunks, model_name=EMBEDDING_MODEL_NAME)
+    if not chunks:
+        logger.error("Pipeline aborted: No text chunks created from document.")
+        return None
 
+    vectorstore = embed_texts(chunks, model_name=EMBEDDING_MODEL_NAME)
     logger.info("Document processing and embedding pipeline completed.")
+
+    return vectorstore
+
+
+def load_vectorstore() -> FAISS | None:
+    """
+    Load the FAISS vectorstore from local storage.
+    """
+    faiss_index_path = Path(FAISS_INDEX_PATH) / "index.faiss"
+    
+    if not faiss_index_path.exists():
+        logger.warning("FAISS index does not exist locally.")
+        return None
+
+    vectorstore = FAISS.load_local(
+        FAISS_INDEX_PATH, 
+        GoogleGenerativeAIEmbeddings(model=EMBEDDING_MODEL_NAME),
+        allow_dangerous_deserialization=True
+    )
+    logger.info("FAISS vectorstore loaded successfully.")
     return vectorstore
