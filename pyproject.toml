@@ -16,6 +16,13 @@ dependencies = [
     "ruff>=0.14.10",
 ]
 
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/search_agent"]
+
 [dependency-groups]
 dev = [
     "pytest>=9.0.2",

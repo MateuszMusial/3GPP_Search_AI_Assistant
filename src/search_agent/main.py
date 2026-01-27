@@ -4,8 +4,8 @@
 import logging
 from dotenv import load_dotenv
 
-from document_processors.pdf_processor import PDFProcessor
-from query_executor import QueryExecutor
+from .document_processors.pdf_processor import PDFProcessor
+from .query_executor import QueryExecutor
 
 
 logging.basicConfig(
@@ -19,7 +19,7 @@ def main():
 
     query_executor = QueryExecutor(file_processor=PDFProcessor())
     
-    result = query_executor.execute_query("What is 5G?")
+    result = query_executor.execute_query("Registration reject")
     print("Query Result:", result)
 
 if __name__ == "__main__":

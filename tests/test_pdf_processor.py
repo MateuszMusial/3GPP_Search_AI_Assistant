@@ -4,7 +4,7 @@ from pytest_mock import MockerFixture
 
 from langchain_core.documents.base import Document
 
-from document_processors.pdf_processor import PDFProcessor
+from search_agent.document_processors.pdf_processor import PDFProcessor
 
 
 def test_get_3gpp_document_path(mocker: MockerFixture) -> None:
@@ -59,10 +59,10 @@ def test_load_document_success(mocker) -> None:
     Test whether load_document successfully loads a PDF document.
     """
     # Arrange
-    mock_loader_class = mocker.patch("document_processors.pdf_processor.PyMuPDFLoader")
+    mock_loader_class = mocker.patch("search_agent.document_processors.pdf_processor.PyMuPDFLoader")
     expected_docs = [Document(page_content="test", metadata={})]
     mock_loader_class.return_value.load.return_value = expected_docs
-    loger_mock = mocker.patch("document_processors.pdf_processor.logger")
+    loger_mock = mocker.patch("search_agent.document_processors.pdf_processor.logger")
     pdf_processor = PDFProcessor()
 
     # Act
@@ -78,9 +78,9 @@ def test_load_document_failure(mocker) -> None:
 
     TEST_FILE_PATH = "data/test.pdf"
     # Arrange
-    mock_loader_class = mocker.patch("document_processors.pdf_processor.PyMuPDFLoader")
+    mock_loader_class = mocker.patch("search_agent.document_processors.pdf_processor.PyMuPDFLoader")
     mock_loader_class.side_effect = Exception(f"Failed to load document from {TEST_FILE_PATH}")
-    loger_mock = mocker.patch("document_processors.pdf_processor.logger")
+    loger_mock = mocker.patch("search_agent.document_processors.pdf_processor.logger")
     pdf_processor = PDFProcessor()
 
     # Act

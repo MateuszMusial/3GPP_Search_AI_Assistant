@@ -6,7 +6,7 @@ from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain_core.documents.base import Document
 
-from document_processors.document_processor import DocumentProcessor
+from .document_processors.document_processor import DocumentProcessor
 
 
 logger = logging.getLogger(__name__)

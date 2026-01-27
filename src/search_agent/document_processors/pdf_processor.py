@@ -3,7 +3,7 @@ from pathlib import Path
 
 from langchain_community.document_loaders import PyMuPDFLoader
 
-from document_processors.document_processor import DocumentProcessor
+from .document_processor import DocumentProcessor
 
 
 logger = logging.getLogger(__name__)
