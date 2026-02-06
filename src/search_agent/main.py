@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 
 from .document_processors.pdf_processor import PDFProcessor
 from .query_executor import QueryExecutor
+from .cli_parser import parse_cli_args
 
 
 logging.basicConfig(
@@ -18,8 +19,9 @@ def main():
     load_dotenv()
 
     query_executor = QueryExecutor(file_processor=PDFProcessor())
-    
-    result = query_executor.execute_query("Registration reject")
+    args = parse_cli_args()
+
+    result = query_executor.execute_query(args.ie)
     print("Query Result:", result)
 
 if __name__ == "__main__":

@@ -45,10 +45,10 @@ The core application code resides in the `src/search_agent/` directory, followin
 
 ### Running the Application
 
-To run the main application logic, which will process documents (and create the FAISS index if it doesn't exist) and execute a sample query:
+To run the main application logic, which will process documents (and create the FAISS index if it doesn't exist) and then execute a query using the provided information element:
 
 ```bash
-uv run python -m search_agent.main
+uv run python -m search_agent.main --ie "RLF timer"
 ```
 
 ### Running Tests
