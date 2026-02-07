@@ -6,7 +6,7 @@ class DocumentProcessor(ABC):
     Abstract base class for document processing.
     """
     @abstractmethod
-    def get_3gpp_document_path(self, data_dir: str) -> str:
+    def get_3gpp_document_path(self, data_dir: str = "data") -> str:
         """
         Get the path of the first document in the specified directory.
         """
