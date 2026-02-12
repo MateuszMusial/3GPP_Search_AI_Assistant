@@ -7,9 +7,7 @@ from langchain_google_genai import GoogleGenerativeAI
 logger = logging.getLogger(__name__)
 
 # Constants
-MODEL_NAME = "gemini-2.5-pro"
-EMBEDDING_MODEL_NAME = "models/embedding-001"
-FAISS_INDEX_PATH = "faiss_index"
+MODEL_NAME = "gemini-3-pro-preview"
 
 
 def create_llm_model(temperature: float = 0.1) -> GoogleGenerativeAI:
@@ -30,6 +28,3 @@ def _get_api_key() -> str:
     if not api_key:
         raise ValueError("GOOGLE_API_KEY not found in environment variables.")
     return api_key
-
-
-

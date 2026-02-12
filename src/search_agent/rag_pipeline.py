@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 # Constants
 MODEL_NAME = "gemini-2.5-pro"
-EMBEDDING_MODEL_NAME = "models/embedding-001"
+EMBEDDING_MODEL_NAME = "gemini-embedding-001"
 FAISS_INDEX_PATH = "faiss_index"
 
 
