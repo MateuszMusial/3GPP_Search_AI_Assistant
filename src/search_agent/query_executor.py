@@ -1,17 +1,18 @@
 import logging
 
-from .rag_pipeline import start_rag_pipeline
-from .model_service import create_llm_model
+
+from .models.model_service import ModelService
 from .document_processors.document_processor import DocumentProcessor
+from .rag_pipeline import RAGPipeline
 from .prompts import get_prompt_template
 
 logger = logging.getLogger(__name__)
 
 class QueryExecutor:
-    def __init__(self, file_processor: DocumentProcessor):
+    def __init__(self, file_processor: DocumentProcessor, llm_model: ModelService, pipeline: RAGPipeline):
         self.file_processor = file_processor
-        self.vectorstore = start_rag_pipeline(file_processor=self.file_processor)
-        self.model = create_llm_model()
+        self.vectorstore = pipeline.start_rag_pipeline()
+        self.model = llm_model.create_llm_model()
 
     def execute_query(self, query: str) -> str:
         """
