@@ -25,12 +25,14 @@ logging.basicConfig(
 def main():
     load_dotenv()
     args = parse_cli_args()
-    choosen_model = args.model
+    chosen_model = args.model
 
-    if choosen_model in available_models["google"]:
-        model_service = GoogleModelService(model_name=choosen_model)
-    elif choosen_model in available_models["openai"]:
-        model_service = OpenAIModelService(model_name=choosen_model)
+    if chosen_model in available_models["google"]:
+        model_service = GoogleModelService(model_name=chosen_model)
+    elif chosen_model in available_models["openai"]:
+        model_service = OpenAIModelService(model_name=chosen_model)
+    else:
+        raise ValueError(f"Invalid model: {chosen_model}. Must be one of {available_models}")
 
     file_processor = PDFProcessor() # PDFProcessor is the default document processor for now
 

@@ -43,7 +43,7 @@ class OpenAIModelService(ModelService):
         return embedding_model
 
     def _get_api_key(self) -> str:
-        api_key = os.environ.get("OPEN_AI_API_KEY")
+        api_key = os.environ.get("OPENAI_API_KEY")
         if not api_key:
-            raise ValueError("OPEN_AI_API_KEY not found in environment variables.")
+            raise ValueError("OPENAI_API_KEY not found in environment variables.")
         return api_key
