@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 
 from .rag_pipeline import RAGPipeline
 from .document_processors.pdf_processor import PDFProcessor
+from .document_processors.markdown_processor import MarkdownProcessor
 from .query_executor import QueryExecutor
 from .models.google_models import GoogleModelService
 from .models.openai_models import OpenAIModelService
@@ -26,6 +27,7 @@ def main():
     load_dotenv()
     args = parse_cli_args()
     chosen_model = args.model
+    file_path = args.path
 
     if chosen_model in available_models["google"]:
         model_service = GoogleModelService(model_name=chosen_model)
@@ -34,7 +36,12 @@ def main():
     else:
         raise ValueError(f"Invalid model: {chosen_model}. Must be one of {available_models}")
 
-    file_processor = PDFProcessor() # PDFProcessor is the default document processor for now
+    if file_path.endswith(".pdf"):
+        file_processor = PDFProcessor(document_path=file_path)
+    elif file_path.endswith(".md"):
+        file_processor = MarkdownProcessor(document_path=file_path)
+    else:
+        raise ValueError("Unsupported file type. Only PDF and Markdown files are supported.")
 
     query_executor = QueryExecutor(
         file_processor=file_processor,
