@@ -21,7 +21,6 @@ class RAGPipeline:
     def __init__(self, file_processor: DocumentProcessor, embedding_service: Embeddings):
         self.file_processor = file_processor
         self.embedding_service = embedding_service
-        self.vectorstore = None
 
 
     def split_text(self, docs: list[Document], chunk_size: int = 1000, chunk_overlap: int = 200) -> list[Document]:
@@ -43,9 +42,8 @@ class RAGPipeline:
         logger.info("Creating vectorstore from documents...")
         embeddings = embedding_service
         vectorstore = FAISS.from_documents(chunks, embeddings)
-        vectorstore.save_local(FAISS_INDEX_PATH)
-        logger.info(f"Vectorstore created and saved locally as '{FAISS_INDEX_PATH}'.")
-        
+        vectorstore.save_local(FAISS_INDEX_PATH, index_name=f"{self.file_processor.file_path}.faiss")
+        logger.info(f"Vectorstore created and saved locally as {self.file_processor.file_path}.faiss")
         return vectorstore
 
 
@@ -54,20 +52,14 @@ class RAGPipeline:
         Orchestrate the document processing and embedding pipeline.
         """
         logger.info("Starting RAG pipeline...")
-        faiss_index_path = Path(FAISS_INDEX_PATH) / "index.faiss"
+        faiss_index_path = Path(FAISS_INDEX_PATH) / f"{self.file_processor.file_path}.faiss"
         
         if faiss_index_path.exists():
             logger.info("FAISS index already exists. Loading existing vectorstore.")
             return self.load_vectorstore()
 
         try:
-            pdf_path = self.file_processor.get_3gpp_document_path()
-        except FileNotFoundError:
-            logger.error("Pipeline aborted: 3GPP document not found.")
-            return None
-
-        try:
-            document = self.file_processor.load_document(pdf_path)
+            document = self.file_processor.load_document()
         except FileNotFoundError:
             logger.error("Pipeline aborted: Failed to load document.")
             return None
@@ -86,7 +78,7 @@ class RAGPipeline:
         """
         Load the FAISS vectorstore from local storage.
         """
-        faiss_index_path = Path(FAISS_INDEX_PATH) / "index.faiss"
+        faiss_index_path = Path(FAISS_INDEX_PATH) / f"{self.file_processor.file_path}.faiss"
         
         if not faiss_index_path.exists():
             logger.warning("FAISS index does not exist locally.")

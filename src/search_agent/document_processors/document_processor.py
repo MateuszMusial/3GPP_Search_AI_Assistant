@@ -5,15 +5,12 @@ class DocumentProcessor(ABC):
     """
     Abstract base class for document processing.
     """
-    @abstractmethod
-    def get_3gpp_document_path(self, data_dir: str = "data") -> str:
-        """
-        Get the path of the first document in the specified directory.
-        """
+    def __init__(self, document_path: str) -> None:
         pass
+   
 
     @abstractmethod
-    def load_document(self, file_path: str):
+    def load_document(self):
         """
         Load a document from the specified file path.
         """

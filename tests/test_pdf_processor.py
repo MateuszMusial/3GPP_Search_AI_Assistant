@@ -1,5 +1,4 @@
 import pytest
-from pathlib import Path
 from pytest_mock import MockerFixture
 
 from langchain_core.documents.base import Document
@@ -7,51 +6,28 @@ from langchain_core.documents.base import Document
 from search_agent.document_processors.pdf_processor import PDFProcessor
 
 
-def test_get_3gpp_document_path(mocker: MockerFixture) -> None:
+def test_init_success(mocker: MockerFixture) -> None:
     """
         Test whether get_3gpp_document_path behaves as expected.
     """
     # Arrange
     mock_exists = mocker.patch("pathlib.Path.exists", return_value=True)
-    mock_glob = mocker.patch("pathlib.Path.glob", return_value=[Path("data/3GPP_TS_24.501.pdf")])
-    pdf_processor = PDFProcessor()
-
+    processor = PDFProcessor("data/test.pdf")
     # Act & Assert
-    assert pdf_processor.get_3gpp_document_path() == "data/3GPP_TS_24.501.pdf"
+    assert processor.file_path == "data/test.pdf"
     mock_exists.assert_called_once()
-    mock_glob.assert_called_once()
         
 
-def test_get_3gpp_document_path_no_folder(mocker: MockerFixture) -> None:
+def test_init_folder_not_exists(mocker: MockerFixture) -> None:
     """
         Test whether get_3gpp_document_path raises FileNotFoundError when folder does not exist.
     """
     # Arrange
     mock_exists = mocker.patch("pathlib.Path.exists", return_value=False)
-    pdf_processor = PDFProcessor()
-    
     # Act & Assert
-    with pytest.raises(FileNotFoundError, match="Folder data does not exist."):
-        pdf_processor.get_3gpp_document_path()
-    
+    with pytest.raises(FileNotFoundError, match="Folder .* does not exist."):
+        PDFProcessor("data/test.pdf")
     mock_exists.assert_called_once()
-
-
-def test_get_3gpp_document_path_no_pdfs(mocker: MockerFixture) -> None:
-    """
-        Test whether get_3gpp_document_path raises FileNotFoundError when no PDFs are found.
-    """
-    # Arrange
-    mock_exist = mocker.patch("pathlib.Path.exists", return_value=True)
-    mock_glob = mocker.patch("pathlib.Path.glob", return_value=[])
-    pdf_processor = PDFProcessor()
-
-    # Act & Assert
-    with pytest.raises(FileNotFoundError, match="No PDF files found in the specified directory."):
-        pdf_processor.get_3gpp_document_path()
-
-    mock_exist.assert_called_once()
-    mock_glob.assert_called_once()
 
 
 def test_load_document_success(mocker) -> None:
@@ -63,14 +39,11 @@ def test_load_document_success(mocker) -> None:
     expected_docs = [Document(page_content="test", metadata={})]
     mock_loader_class.return_value.load.return_value = expected_docs
     loger_mock = mocker.patch("search_agent.document_processors.pdf_processor.logger")
-    pdf_processor = PDFProcessor()
-
+    processor = PDFProcessor("data/test.pdf")
     # Act
-    document = pdf_processor.load_document("data/test.pdf")
-
+    document = processor.load_document()
     # Assert
     assert document == expected_docs
-    mock_loader_class.assert_called_once_with("data/test.pdf")
     mock_loader_class.return_value.load.assert_called_once()
     loger_mock.info.assert_called_once_with("Document loaded successfully from data/test.pdf.")
 
@@ -81,12 +54,9 @@ def test_load_document_failure(mocker) -> None:
     mock_loader_class = mocker.patch("search_agent.document_processors.pdf_processor.PyMuPDFLoader")
     mock_loader_class.side_effect = Exception(f"Failed to load document from {TEST_FILE_PATH}")
     loger_mock = mocker.patch("search_agent.document_processors.pdf_processor.logger")
-    pdf_processor = PDFProcessor()
-
+    processor = PDFProcessor("data/test.pdf")
     # Act
-    result = pdf_processor.load_document(TEST_FILE_PATH)
-
+    with pytest.raises(FileNotFoundError, match="Failed to load document from data/test.pdf:"):
+        processor.load_document()
     # Assert
-    assert result is None
-    mock_loader_class.assert_called_once_with("data/test.pdf")
-    loger_mock.error.assert_called_once_with(f"Failed to load document from {TEST_FILE_PATH}: Failed to load document from {TEST_FILE_PATH}")
+    loger_mock.error.assert_called_once()
