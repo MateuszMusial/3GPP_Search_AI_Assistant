@@ -3,12 +3,12 @@
 This folder is dedicated to storing the raw 3GPP specification files used as the primary knowledge base for the LLM Agent.
 
 ## 📥 Purpose
-Any PDF file placed in this directory will be automatically processed, chunked, and indexed into the vector database to enable Retrieval-Augmented Generation (RAG).
+Any PDF or Markdown file placed in this directory can be processed, chunked, and indexed into the vector database to enable Retrieval-Augmented Generation (RAG).
 
 ## 🛠 File Requirements
 To ensure the highest quality of model responses, please follow these guidelines:
 
-* **Format:** Only `.pdf` files are supported.
+* **Format:** `.pdf` and `.md` (Markdown) files are supported.
 * **Source:** It is recommended to download documents directly from the official [3gpp.org](https://www.3gpp.org/ftp/Specs/archive/) portal.
 * **Language:** Documents must be in English (3GPP standard).
 

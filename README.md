@@ -15,7 +15,7 @@ The core application code resides in the `src/search_agent/` directory, followin
 ## Architecture Flow
 
 The system's data flow for ingestion and indexing:
-`PDF Documents` ---> `PyMuPDF (Document Loading)` ---> `RecursiveCharacterTextSplitter (Text Splitting)` ---> `Embedding Model (Embedding)` ---> `FAISS (Vector Indexing)`
+`PDF/Markdown Documents` ---> `Document Processor (PDF/Markdown)` ---> `RecursiveCharacterTextSplitter (Text Splitting)` ---> `Embedding Model (Embedding)` ---> `FAISS (Vector Indexing)`
 
 For query answering (planned inference):
 `User Query` ---> `LLM (Query Processing)` ---> `FAISS (Vector Search)` ---> `Retrieved Chunks` ---> `LLM (Answer Generation)` ---> `Answer`
@@ -43,16 +43,18 @@ For query answering (planned inference):
     ```
 
 3.  **Prepare Data:**
-    Place your 3GPP PDF documents (e.g., `ts_124501v171600p.pdf`) in the `data/` directory.
+    Place your 3GPP documents in the `data/` directory. Supported formats:
+    - PDF documents (e.g., `ts_124501v171600p.pdf`)
+    - Markdown documents (e.g., `specification.md`)
 
 ## Usage
 
 ### Running Queries
 
-To run queries against the indexed documents using the `--ie` (information element) and optionally `--model` arguments:
+To run queries against the indexed documents using the `--ie` (information element), `--path` (document path), and optionally `--model` arguments:
 
 ```bash
-uv run python -m search_agent.main --ie "RLF timer"
+uv run python -m search_agent.main --ie "RLF timer" --path "data/ts_136413v180400p.pdf"
 ```
 
 Available models:
