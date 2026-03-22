@@ -20,10 +20,11 @@ def test_parse_cli_args() -> None:
 
     # Arrange
     test_parser = get_parser()
-    test_args = ["--ie", "Test Information Element", "--model", "gpt-5-nano"]
+    test_args = ["--ie", "Test Information Element", "--path", "/path/to/doc.pdf", "--model", "gpt-5-nano"]
     # Act
     parsed_args = test_parser.parse_args(test_args)
     # Assert
     assert parsed_args.ie is not None
     assert parsed_args.ie == "Test Information Element"
     assert parsed_args.model == "gpt-5-nano"
+    assert parsed_args.path == "/path/to/doc.pdf"

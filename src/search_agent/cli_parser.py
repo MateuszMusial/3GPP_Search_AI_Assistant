@@ -7,6 +7,7 @@ def get_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
     parser.add_argument("--ie", type=str, help="Information element or message to find.", required=True)
+    parser.add_argument("--path", type=str, help="Path to 3gpp document.", required=True)
     parser.add_argument(
         "--model",
         type=str,
