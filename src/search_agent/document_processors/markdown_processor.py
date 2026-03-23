@@ -1,6 +1,8 @@
 import logging
 from pathlib import Path
 
+from langchain_core.documents.base import Document
+
 from .document_processor import DocumentProcessor
 
 
@@ -21,7 +23,7 @@ class MarkdownProcessor(DocumentProcessor):
         self.file_path = document_path
     
 
-    def load_document(self) -> str:
+    def load_document(self) -> list[Document]:
         """
         Load a Markdown document by reading its content.
         """
@@ -29,7 +31,7 @@ class MarkdownProcessor(DocumentProcessor):
             with open(self.file_path, "r", encoding="utf-8") as f:
                 content = f.read()
             logger.info(f"Document loaded successfully from {self.file_path}.")
-            return content
+            return [Document(page_content=content, metadata={"source": self.file_path})]
         except Exception as e:
             logger.error(f"Failed to load document from {self.file_path}: {e}")
             raise FileNotFoundError(f"Failed to load document from {self.file_path}: {e}")

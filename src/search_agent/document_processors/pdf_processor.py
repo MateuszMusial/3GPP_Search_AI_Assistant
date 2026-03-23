@@ -2,6 +2,7 @@ import logging
 from pathlib import Path
 
 from langchain_community.document_loaders import PyMuPDFLoader
+from langchain_core.documents.base import Document
 
 from .document_processor import DocumentProcessor
 
@@ -24,7 +25,7 @@ class PDFProcessor(DocumentProcessor):
         self.file_path = document_path
 
 
-    def load_document(self) -> list[PyMuPDFLoader]:
+    def load_document(self) -> list[Document]:
         """
         Load a PDF document using PyMuPDF.
         """
