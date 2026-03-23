@@ -39,7 +39,9 @@ def test_load_document_success(mocker) -> None:
     # Act
     content = processor.load_document()
     # Assert
-    assert content == "# Test Content"
+    assert len(content) == 1
+    assert content[0].page_content == "# Test Content"
+    assert content[0].metadata["source"] == "data/test.md"
     loger_mock.info.assert_called_once_with("Document loaded successfully from data/test.md.")
     mock_open.assert_called_once_with("data/test.md", "r", encoding="utf-8")
 
