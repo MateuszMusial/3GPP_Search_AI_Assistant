@@ -35,14 +35,14 @@ def test_load_document_success(mocker) -> None:
     # Arrange
     loger_mock = mocker.patch("search_agent.document_processors.markdown_processor.logger")
     mock_open = mocker.patch("builtins.open", mocker.mock_open(read_data="# Test Content"))
-    processor = MarkdownProcessor("data/test.md")
+    processor = MarkdownProcessor("test.md")
     # Act
     content = processor.load_document()
     # Assert
     assert len(content) == 1
     assert content[0].page_content == "# Test Content"
-    assert content[0].metadata["source"] == "data/test.md"
-    loger_mock.info.assert_called_once_with("Document loaded successfully from data/test.md.")
+    assert content[0].metadata["source"] == "test.md"
+    loger_mock.info.assert_called_once_with("Document loaded successfully from test.md.")
     mock_open.assert_called_once_with("data/test.md", "r", encoding="utf-8")
 
 def test_load_document_failure(mocker) -> None:
@@ -51,9 +51,9 @@ def test_load_document_failure(mocker) -> None:
     # Arrange
     mock_open = mocker.patch("builtins.open", side_effect=Exception(f"Failed to load document from {TEST_FILE_PATH}"))
     loger_mock = mocker.patch("search_agent.document_processors.markdown_processor.logger")
-    processor = MarkdownProcessor("data/test.md")
+    processor = MarkdownProcessor("test.md")
     # Act
-    with pytest.raises(FileNotFoundError, match="Failed to load document from data/test.md:"):
+    with pytest.raises(FileNotFoundError, match="Failed to load document from test.md:"):
         processor.load_document()
     # Assert
     loger_mock.error.assert_called_once()
