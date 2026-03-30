@@ -28,7 +28,7 @@ class MarkdownProcessor(DocumentProcessor):
         Load a Markdown document by reading its content.
         """
         try:
-            with open(self.file_path, "r", encoding="utf-8") as f:
+            with open(f"data/{self.file_path}", "r", encoding="utf-8") as f:
                 content = f.read()
             logger.info(f"Document loaded successfully from {self.file_path}.")
             return [Document(page_content=content, metadata={"source": self.file_path})]
