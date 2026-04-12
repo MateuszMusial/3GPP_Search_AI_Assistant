@@ -54,7 +54,7 @@ For query answering (planned inference):
 To run queries against the indexed documents using the `--ie` (information element), `--path` (document path), and optionally `--model` arguments:
 
 ```bash
-uv run python -m search_agent.main --ie "RLF timer" --path "data/ts_136413v180400p.pdf"
+uv run python -m search_agent.main --ie "RLF timer" --path "ts_136413v180400p.pdf"
 ```
 
 Available models:
