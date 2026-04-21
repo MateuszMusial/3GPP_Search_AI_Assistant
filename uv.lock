@@ -15,6 +15,7 @@ name = "3gpp-search-agent"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
+    { name = "datasets" },
     { name = "faiss-cpu" },
     { name = "langchain" },
     { name = "langchain-community" },
@@ -37,6 +38,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "datasets", specifier = ">=4.8.4" },
     { name = "faiss-cpu", specifier = ">=1.13.2" },
     { name = "langchain", specifier = ">=1.2.0" },
     { name = "langchain-community", specifier = ">=0.4.1" },

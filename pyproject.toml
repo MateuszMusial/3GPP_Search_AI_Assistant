@@ -5,6 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "datasets>=4.8.4",
     "faiss-cpu>=1.13.2",
     "langchain>=1.2.0",
     "langchain-community>=0.4.1",
@@ -14,7 +15,7 @@ dependencies = [
     "openai>=2.24.0",
     "pymupdf>=1.26.7",
     "python-dotenv>=1.2.1",
-    "ragas>=0.4.3"
+    "ragas>=0.4.3",
 ]
 
 [build-system]
