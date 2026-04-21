@@ -78,3 +78,17 @@ The project uses `ruff` for linting.
 ```bash
 uv run ruff check .
 ```
+
+## Evaluation
+
+The RAG system was evaluated using the RAGAS framework via the `ragas_evaluator.py` script. The evaluation utilized the **Google Gemini 2.5 Flash** model to assess answer correctness, faithfulness, context entity recall, and context recall metrics.
+
+Evaluation results are stored in `eval1_result.csv`.
+
+### Evaluation Results
+
+![Evaluation Results 1](eval1_res1.png)
+
+![Evaluation Results 2](eval1_res2.png)
+
+![Evaluation Results](eval1_res3.png)
