@@ -24,7 +24,7 @@ human_template = (
     "**Target Information Element (IE):** {target_ie}\n\n"
     "### TASK\n"
     "Analyze the context above. Extract the ASN.1 definition and the Field Descriptions for '{target_ie}'.\n"
-    "Provide: Functional Role, Data Type, Presence/Need Code, Value Range, and suggested JSON implementation."
+    "Provide: Functional Role, Data Type, Presence/Need Code, Value Range, Criticality and suggested JSON implementation."
 )
 
 
